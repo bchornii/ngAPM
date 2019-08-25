@@ -1,22 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { IProduct } from 'src/app/models/product';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from '../product.service';
 
 @Component({
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
 export class ProductDetailComponent implements OnInit {
-  pageTitle = 'Product Detail';
   product: IProduct;
 
   constructor(private route: ActivatedRoute,
-              private router: Router) { }
+              private router: Router,
+              private productService: ProductService) { }
 
   ngOnInit() {
-    let id = +this.route.snapshot.paramMap.get('id');
-    this.pageTitle += `${id}`;
-    this.product = {} as IProduct;
+    const id = +this.route.snapshot.paramMap.get('id');
+    this.productService.getProduct(id).subscribe(p => {
+      this.product = p;
+    });
   }
 
   onBack(): void {
